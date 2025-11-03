@@ -163,8 +163,8 @@ This project and its source code are the exclusive property of Asma Daab and Tes
 
 **To request permission:** Contact the maintainers via LinkedIn
 
-Copyright © 2024 Asma Daab & Tesnime Ellabou. All rights reserved.
+Copyright © 2025 Asma Daab & Tesnime Ellabou. All rights reserved.
 
 ---
 
-**Made with 💚 for plant lovers, ML enthusiasts, and CV-ready tech!**
+**Made with 💚 for plant lovers, ML enthusiasts**
