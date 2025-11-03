@@ -1,6 +1,6 @@
 # 🌱 PlantDoctor 
 
-**PlantDoctor ** is an innovative application that **diagnoses your plants** from a single photo, assigns a **health score**, detects anomalies, provides **interactive recommendations**, and explains predictions using **Explainable AI (XAI)**. This project combines **Computer Vision + NLP + LLM + MLOps** for a complete, interactive, and CV-impressive experience.
+**PlantDoctor** is an innovative application that **diagnoses your plants** from a single photo, assigns a **health score**, detects anomalies, provides **interactive recommendations**, and explains predictions using **Explainable AI (XAI)**. This project combines **Computer Vision + NLP + LLM + MLOps** for a complete, interactive, and CV-impressive experience.
 
 ---
 
