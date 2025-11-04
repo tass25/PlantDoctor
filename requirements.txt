@@ -1,0 +1,15 @@
+torch
+torchvision
+pillow
+fastapi
+uvicorn
+streamlit
+mlflow
+evidently
+langchain
+crewai
+scikit-learn
+opencv-python
+numpy
+pandas
+matplotlib
