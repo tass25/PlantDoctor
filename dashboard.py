@@ -97,8 +97,8 @@ def show():
     @st.cache_resource
     def load_models():
         try:
-            model1 = tf.keras.models.load_model('model1.keras')
-            model2 = tf.keras.models.load_model('model2.keras')
+            model1 = tf.keras.models.load_model('final_best_model.keras')
+            model2 = tf.keras.models.load_model('second_best_model.keras')
             return model1, model2, True
         except Exception as e:
             st.error(f"Error loading models: {e}")
@@ -116,10 +116,8 @@ def show():
             rag_system.initialize()
     
     # Class names
-    class_names = ['Healthy', 'Bacterial Spot', 'Early Blight', 'Late Blight', 
-                   'Leaf Mold', 'Septoria Leaf Spot', 'Spider Mites', 
-                   'Target Spot', 'Yellow Leaf Curl Virus', 'Mosaic Virus']
-    
+    class_names = ['Grape___Black_rot', 'Grape___Esca_(Black_Measles)', 'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)', 'Late Blight', 
+                   'Grape___healthy']
     # Multi-modal input section
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("📤 Multi-Modal Plant Analysis")
