@@ -1,7 +1,6 @@
 torch
 torchvision
 uvicorn
-mlflow
 evidently
 crewai
 scikit-learn
