@@ -97,8 +97,9 @@ def show():
     @st.cache_resource
     def load_models():
         try:
-            model1 = tf.keras.models.load_model('final_best_model.keras')
-            model2 = tf.keras.models.load_model('second_best_model.keras')
+            model1 = tf.keras.models.load_model('/workspaces/PlantDoctor/final_best_model.keras', compile=False )
+
+            model2 = tf.keras.models.load_model('/workspaces/PlantDoctor/second_best_model.keras',compile=False)
             return model1, model2, True
         except Exception as e:
             st.error(f"Error loading models: {e}")
@@ -134,7 +135,7 @@ def show():
     with col2:
         text_description = st.text_area(
             "Additional Context (Optional)",
-            placeholder="e.g., 'Yellow spots appeared after rain', 'Leaves wilting in afternoon'",
+            placeholder="'Yellow spots appeared after rain', 'Leaves wilting in afternoon'",
             height=100,
             help="Provide additional symptoms or context for better diagnosis"
         )
@@ -364,6 +365,6 @@ def show():
         st.markdown("""
         <div class="card">
             <h4>3️⃣ Personalized Care</h4>
-            <p>Get custom advice + earn points & badges!</p>
+            <p>Get custom advice + earn points & badges</p>
         </div>
         """, unsafe_allow_html=True)
