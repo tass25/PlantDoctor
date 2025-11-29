@@ -7,7 +7,6 @@
 
 # DVC cache and metadata
 .dvc/
-*.dvc
 
 # TensorFlow/Keras model artifacts
 *.keras
@@ -24,3 +23,4 @@ __pycache__/
 
 # Logs
 *.log
+/newData
