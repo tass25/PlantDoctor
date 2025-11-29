@@ -1,0 +1,15 @@
+FROM python:3.11-slim
+
+# Install dependencies
+RUN pip install --upgrade pip
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Create workdir
+WORKDIR /app
+COPY src/ ./src/
+COPY newData/ ./newData/
+COPY params.yaml .
+
+# Entrypoint for training
+CMD ["python", "src/train/train_mobilenet.py"]
