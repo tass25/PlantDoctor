@@ -1,0 +1,26 @@
+# Local configuration
+/config.local
+
+# Temporary or cache files
+/tmp
+/cache
+
+# DVC cache and metadata
+.dvc/
+*.dvc
+
+# TensorFlow/Keras model artifacts
+*.keras
+saved_model/
+__pycache__/
+*.pyc
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# VSCode or PyCharm settings (optional)
+.vscode/
+.idea/
+
+# Logs
+*.log
