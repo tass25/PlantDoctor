@@ -1,0 +1,8 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY src/train ./train
+COPY src/utils ./utils
+COPY data ./data   # DVC pull sera utilisé pour récupérer les datasets
+CMD ["python", "train/train_mobilenet.py"]
