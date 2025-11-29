@@ -1,0 +1,5 @@
+outs:
+- md5: 137130ad10751e6a9754e95bae16210d
+  size: 14389520
+  hash: md5
+  path: mobilenet_model.keras

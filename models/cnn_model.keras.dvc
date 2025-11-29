@@ -1,0 +1,5 @@
+outs:
+- md5: 1ebfb14f9b1003417c799778b073cecd
+  size: 933081
+  hash: md5
+  path: cnn_model.keras
