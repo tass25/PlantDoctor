@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* User Light Theme - Green Nature */
+    --background: 122 39% 92%;
+    --foreground: 122 50% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 122 50% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 122 50% 15%;
+    --primary: 122 39% 33%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 122 39% 85%;
+    --secondary-foreground: 122 50% 15%;
+    --muted: 122 25% 90%;
+    --muted-foreground: 122 20% 40%;
+    --accent: 122 47% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 122 30% 80%;
+    --input: 122 30% 85%;
+    --ring: 122 39% 33%;
+    --radius: 0.9375rem;
+    
+    /* Custom gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(122, 39%, 33%) 0%, hsl(122, 47%, 58%) 100%);
+    --gradient-bg: linear-gradient(180deg, hsl(122, 39%, 92%) 0%, hsl(122, 39%, 85%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 100%) 0%, hsl(122, 25%, 98%) 100%);
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 8px hsla(122, 39%, 33%, 0.08);
+    --shadow-md: 0 4px 16px hsla(122, 39%, 33%, 0.12);
+    --shadow-lg: 0 8px 32px hsla(122, 39%, 33%, 0.16);
+    --shadow-glow: 0 0 24px hsla(122, 47%, 58%, 0.3);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .dark {
+    /* User Dark Theme - Navy/Teal */
+    --background: 220 40% 12%;
+    --foreground: 180 10% 88%;
+    --card: 220 35% 15%;
+    --card-foreground: 180 10% 88%;
+    --popover: 220 35% 15%;
+    --popover-foreground: 180 10% 88%;
+    --primary: 174 62% 47%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 30% 20%;
+    --secondary-foreground: 180 10% 88%;
+    --muted: 220 25% 18%;
+    --muted-foreground: 180 5% 65%;
+    --accent: 174 56% 42%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 25% 25%;
+    --input: 220 30% 20%;
+    --ring: 174 62% 47%;
+    
+    /* Custom gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(174, 62%, 47%) 0%, hsl(174, 56%, 42%) 100%);
+    --gradient-bg: linear-gradient(180deg, hsl(220, 40%, 12%) 0%, hsl(220, 35%, 18%) 100%);
+    --gradient-card: linear-gradient(145deg, hsla(220, 35%, 15%, 0.8) 0%, hsla(220, 30%, 18%, 0.6) 100%);
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 8px hsla(0, 0%, 0%, 0.3);
+    --shadow-md: 0 4px 16px hsla(0, 0%, 0%, 0.4);
+    --shadow-lg: 0 8px 32px hsla(0, 0%, 0%, 0.5);
+    --shadow-glow: 0 0 24px hsla(174, 62%, 47%, 0.4);
+  }
+
+  .admin-theme {
+    /* Admin Theme - Dark Red/Pink */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 348 83% 63%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 331 65% 62%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 348 83% 63%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 348 40% 25%;
+    --input: 0 0% 18%;
+    --ring: 348 83% 63%;
+    
+    /* Custom gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(348, 83%, 63%) 0%, hsl(331, 65%, 62%) 100%);
+    --gradient-bg: linear-gradient(180deg, hsl(0, 0%, 8%) 0%, hsl(0, 0%, 12%) 100%);
+    --gradient-card: linear-gradient(145deg, hsla(0, 0%, 12%, 0.9) 0%, hsla(0, 0%, 15%, 0.7) 100%);
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 8px hsla(348, 83%, 63%, 0.15);
+    --shadow-md: 0 4px 16px hsla(348, 83%, 63%, 0.2);
+    --shadow-lg: 0 8px 32px hsla(348, 83%, 63%, 0.25);
+    --shadow-glow: 0 0 24px hsla(348, 83%, 63%, 0.5);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply text-foreground;
+    background: var(--gradient-bg);
+    font-feature-settings: "kern" 1, "liga" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .glassmorphism {
+    background: var(--gradient-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  
+  .animate-counter {
+    animation: countUp 1s ease-out;
+  }
+  
+  @keyframes countUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in-up {
+    animation: fadeInUp 0.5s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .hover-lift {
+    transition: var(--transition-smooth);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .badge-glow {
+    animation: badgeGlow 2s ease-in-out infinite;
+  }
+  
+  @keyframes badgeGlow {
+    0%, 100% {
+      filter: drop-shadow(0 0 8px hsla(122, 47%, 58%, 0.6));
+    }
+    50% {
+      filter: drop-shadow(0 0 16px hsla(122, 47%, 58%, 0.9));
+    }
+  }
+}
