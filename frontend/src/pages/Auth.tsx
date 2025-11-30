@@ -33,78 +33,87 @@ const Auth = () => {
   };
 
   const handleLogin = async () => {
-    if (!loginUsername || !loginPassword) {
-      toast({ title: "Error", description: "Please fill all fields", variant: "destructive" });
-      return;
+  if (!loginUsername || !loginPassword) {
+    toast({ title: "Error", description: "Please fill all fields", variant: "destructive" });
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: loginUsername, password: loginPassword }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.detail || "Login failed");
     }
-    setLoading(true);
-    setTimeout(() => {
-      const users = JSON.parse(localStorage.getItem("plantdoctor_users") || "[]");
-      const user = users.find((u: any) => u.username === loginUsername);
-      
-      hashPassword(loginPassword).then((hashedPassword) => {
-        if (user && user.password === hashedPassword) {
-          localStorage.setItem("plantdoctor_current_user", JSON.stringify(user));
-          toast({ title: "Welcome back! 🌿", description: "Login successful" });
-          navigate(user.role === "admin" ? "/admin" : "/dashboard");
-        } else {
-          toast({ title: "Error", description: "Invalid credentials", variant: "destructive" });
-        }
-        setLoading(false);
-      });
-    }, 800);
-  };
+
+    // Save user and JWT token
+    localStorage.setItem("plantdoctor_current_user", JSON.stringify(data.user));
+    localStorage.setItem("plantdoctor_jwt", data.access_token);
+
+    toast({ title: "Welcome back! 🌿", description: "Login successful" });
+    navigate(data.user.role === "admin" ? "/admin" : "/dashboard");
+
+  } catch (err: any) {
+    toast({ title: "Error", description: err.message, variant: "destructive" });
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleRegister = async () => {
-    if (!registerUsername || !registerPassword || !confirmPassword) {
-      toast({ title: "Error", description: "Please fill all fields", variant: "destructive" });
-      return;
-    }
-    if (registerUsername.length < 3) {
-      toast({ title: "Error", description: "Username must be at least 3 characters", variant: "destructive" });
-      return;
-    }
-    if (registerPassword.length < 6) {
-      toast({ title: "Error", description: "Password must be at least 6 characters", variant: "destructive" });
-      return;
-    }
-    if (registerPassword !== confirmPassword) {
-      toast({ title: "Error", description: "Passwords do not match", variant: "destructive" });
-      return;
+  if (!registerUsername || !registerPassword || !confirmPassword) {
+    toast({ title: "Error", description: "Please fill all fields", variant: "destructive" });
+    return;
+  }
+  if (registerUsername.length < 3) {
+    toast({ title: "Error", description: "Username must be at least 3 characters", variant: "destructive" });
+    return;
+  }
+  if (registerPassword.length < 6) {
+    toast({ title: "Error", description: "Password must be at least 6 characters", variant: "destructive" });
+    return;
+  }
+  if (registerPassword !== confirmPassword) {
+    toast({ title: "Error", description: "Passwords do not match", variant: "destructive" });
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: registerUsername, password: registerPassword }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.detail || "Registration failed");
     }
 
-    setLoading(true);
-    const users = JSON.parse(localStorage.getItem("plantdoctor_users") || "[]");
-    if (users.find((u: any) => u.username === registerUsername)) {
-      toast({ title: "Error", description: "Username already exists", variant: "destructive" });
-      setLoading(false);
-      return;
-    }
+    // Save user and JWT token
+    localStorage.setItem("plantdoctor_current_user", JSON.stringify(data.user));
+    localStorage.setItem("plantdoctor_jwt", data.access_token);
 
-    const hashedPassword = await hashPassword(registerPassword);
-    const newUser = {
-      id: Date.now().toString(),
-      username: registerUsername,
-      password: hashedPassword,
-      role: "user",
-      createdAt: new Date().toISOString(),
-      points: 0,
-      scans: 0,
-      badges: [],
-      plantsSaved: 0,
-      perfectScans: 0,
-    };
-
-    users.push(newUser);
-    localStorage.setItem("plantdoctor_users", JSON.stringify(users));
-    localStorage.setItem("plantdoctor_current_user", JSON.stringify(newUser));
-    
     toast({ title: "Welcome! 🌱", description: "Account created successfully" });
-    setTimeout(() => {
-      navigate("/dashboard");
-      setLoading(false);
-    }, 800);
-  };
+    navigate("/dashboard");
+
+  } catch (err: any) {
+    toast({ title: "Error", description: err.message, variant: "destructive" });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
