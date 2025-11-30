@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Leaf, Sun, Moon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { authAPI } from "../services/api";
 
 const Auth = () => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -25,95 +26,77 @@ const Auth = () => {
     document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 
-  const hashPassword = async (password: string) => {
-    const msgBuffer = new TextEncoder().encode(password);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  const handleLogin = async () => {
+    if (!loginUsername || !loginPassword) {
+      toast({ title: "Error", description: "Please fill all fields", variant: "destructive" });
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const response = await authAPI.login(loginUsername, loginPassword);
+      
+      // Store user data with token
+      const userData = {
+        ...response.user,
+        access_token: response.access_token,
+      };
+      localStorage.setItem("plantdoctor_current_user", JSON.stringify(userData));
+      
+      toast({ title: "Welcome back! 🌿", description: "Login successful" });
+      navigate(response.user.role === "admin" ? "/admin" : "/dashboard");
+    } catch (error: any) {
+      toast({ 
+        title: "Error", 
+        description: error.message || "Login failed", 
+        variant: "destructive" 
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleLogin = async () => {
-  if (!loginUsername || !loginPassword) {
-    toast({ title: "Error", description: "Please fill all fields", variant: "destructive" });
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const res = await fetch("http://127.0.0.1:8000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: loginUsername, password: loginPassword }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.detail || "Login failed");
-    }
-
-    // Save user and JWT token
-    localStorage.setItem("plantdoctor_current_user", JSON.stringify(data.user));
-    localStorage.setItem("plantdoctor_jwt", data.access_token);
-
-    toast({ title: "Welcome back! 🌿", description: "Login successful" });
-    navigate(data.user.role === "admin" ? "/admin" : "/dashboard");
-
-  } catch (err: any) {
-    toast({ title: "Error", description: err.message, variant: "destructive" });
-  } finally {
-    setLoading(false);
-  }
-};
-
   const handleRegister = async () => {
-  if (!registerUsername || !registerPassword || !confirmPassword) {
-    toast({ title: "Error", description: "Please fill all fields", variant: "destructive" });
-    return;
-  }
-  if (registerUsername.length < 3) {
-    toast({ title: "Error", description: "Username must be at least 3 characters", variant: "destructive" });
-    return;
-  }
-  if (registerPassword.length < 6) {
-    toast({ title: "Error", description: "Password must be at least 6 characters", variant: "destructive" });
-    return;
-  }
-  if (registerPassword !== confirmPassword) {
-    toast({ title: "Error", description: "Passwords do not match", variant: "destructive" });
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const res = await fetch("http://127.0.0.1:8000/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: registerUsername, password: registerPassword }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.detail || "Registration failed");
+    if (!registerUsername || !registerPassword || !confirmPassword) {
+      toast({ title: "Error", description: "Please fill all fields", variant: "destructive" });
+      return;
+    }
+    if (registerUsername.length < 3) {
+      toast({ title: "Error", description: "Username must be at least 3 characters", variant: "destructive" });
+      return;
+    }
+    if (registerPassword.length < 6) {
+      toast({ title: "Error", description: "Password must be at least 6 characters", variant: "destructive" });
+      return;
+    }
+    if (registerPassword !== confirmPassword) {
+      toast({ title: "Error", description: "Passwords do not match", variant: "destructive" });
+      return;
     }
 
-    // Save user and JWT token
-    localStorage.setItem("plantdoctor_current_user", JSON.stringify(data.user));
-    localStorage.setItem("plantdoctor_jwt", data.access_token);
-
-    toast({ title: "Welcome! 🌱", description: "Account created successfully" });
-    navigate("/dashboard");
-
-  } catch (err: any) {
-    toast({ title: "Error", description: err.message, variant: "destructive" });
-  } finally {
-    setLoading(false);
-  }
-};
-
+    setLoading(true);
+    try {
+      const response = await authAPI.register(registerUsername, registerPassword, confirmPassword);
+      
+      // Store user data with token
+      const userData = {
+        ...response.user,
+        access_token: response.access_token,
+      };
+      localStorage.setItem("plantdoctor_current_user", JSON.stringify(userData));
+      
+      toast({ title: "Welcome! 🌱", description: "Account created successfully" });
+      navigate("/dashboard");
+    } catch (error: any) {
+      toast({ 
+        title: "Error", 
+        description: error.message || "Registration failed", 
+        variant: "destructive" 
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">

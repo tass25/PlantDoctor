@@ -1,44 +1,121 @@
-from fastapi import APIRouter, HTTPException, Depends
-from fastapi.security import OAuth2PasswordBearer
-from typing import List
-import json
-import os
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
+from utils.json_handler import find_json_item, find_all_json_items
+from utils.jwt_handler import get_current_user
+from config import settings
 
-router = APIRouter()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
+router = APIRouter(prefix="/users", tags=["Users"])
 
-USERS_FILE = "users.json"
+class UserProfile(BaseModel):
+    id: str
+    username: str
+    role: str
+    created_at: str
+    stats: dict
 
-# Helper function to load users
-def load_users():
-    if not os.path.exists(USERS_FILE):
-        return []
-    with open(USERS_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
+class DashboardStats(BaseModel):
+    user: UserProfile
+    recent_analyses: list
+    badges: list
+    ranking: dict
 
-# Helper function to save users
-def save_users(users):
-    with open(USERS_FILE, "w", encoding="utf-8") as f:
-        json.dump(users, f, indent=4)
+@router.get("/me", response_model=UserProfile)
+async def get_current_user_profile(current_user: dict = Depends(get_current_user)):
+    """
+    Get current user's profile.
+    """
+    user = find_json_item(
+        settings.USERS_FILE, 
+        lambda u: u.get("username") == current_user["username"]
+    )
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    # Remove password from response
+    user_data = {k: v for k, v in user.items() if k != "password"}
+    return user_data
 
-# Example route: get all users
-@router.get("/", tags=["users"])
-async def get_all_users():
-    users = load_users()
-    # don't return passwords
-    for u in users:
-        u.pop("password", None)
-    return users
+@router.get("/dashboard", response_model=DashboardStats)
+async def get_dashboard_stats(current_user: dict = Depends(get_current_user)):
+    """
+    Get dashboard statistics for current user.
+    """
+    # Get user
+    user = find_json_item(
+        settings.USERS_FILE,
+        lambda u: u.get("username") == current_user["username"]
+    )
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    # Get user's history
+    user_history = find_all_json_items(
+        settings.HISTORY_FILE,
+        lambda h: h.get("username") == current_user["username"]
+    )
+    
+    # Sort by timestamp descending and get recent 5
+    user_history.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
+    recent_analyses = user_history[:5]
+    
+    # Get user's badges
+    all_badges = find_all_json_items(settings.BADGES_FILE)
+    user_badges = [b for b in all_badges if b.get("username") == current_user["username"]]
+    
+    # Calculate ranking
+    all_users = find_all_json_items(settings.USERS_FILE)
+    all_users.sort(key=lambda x: x.get("stats", {}).get("total_points", 0), reverse=True)
+    
+    user_rank = 0
+    for idx, u in enumerate(all_users, 1):
+        if u.get("username") == current_user["username"]:
+            user_rank = idx
+            break
+    
+    ranking = {
+        "rank": user_rank,
+        "total_users": len(all_users),
+        "percentile": round((1 - (user_rank / len(all_users))) * 100, 1) if all_users else 0
+    }
+    
+    # Remove password from user data
+    user_data = {k: v for k, v in user.items() if k != "password"}
+    
+    return {
+        "user": user_data,
+        "recent_analyses": recent_analyses,
+        "badges": user_badges,
+        "ranking": ranking
+    }
 
-# Example route: get current user info
-@router.get("/me", tags=["users"])
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    users = load_users()
-    # for now just return first user as placeholder
-    if not users:
-        raise HTTPException(status_code=404, detail="No users found")
-    user = users[0]
-    user.pop("password", None)
-    return user
-
-
+@router.get("/profile/{username}")
+async def get_user_profile(username: str, current_user: dict = Depends(get_current_user)):
+    """
+    Get another user's public profile (for leaderboard, etc).
+    """
+    user = find_json_item(
+        settings.USERS_FILE,
+        lambda u: u.get("username") == username
+    )
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    # Return only public information
+    return {
+        "username": user["username"],
+        "created_at": user.get("created_at"),
+        "stats": user.get("stats", {}),
+        "role": user.get("role")
+    }
