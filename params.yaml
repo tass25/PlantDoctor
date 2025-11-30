@@ -12,3 +12,6 @@ data:
   train_dir: ./newData/train_split
   valid_dir: ./newData/valid_split
   test_dir: ./newData/test_split
+models:
+  cnn: models/cnn_model.keras
+  mobilenet: models/mobilenet_model.keras

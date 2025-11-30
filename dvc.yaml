@@ -1,0 +1,30 @@
+stages:
+  train_mobilenet:
+    cmd: python src/train/train_mobilenet.py
+    deps:
+      - src/train/train_mobilenet.py
+      - ${data.train_dir}
+      - ${data.valid_dir}
+      - ${data.test_dir}
+    params:
+      - mobilenet.batch_size
+      - mobilenet.epochs
+      - mobilenet.lr
+      - models.mobilenet
+    outs:
+      - ${models.mobilenet}
+
+  train_cnn:
+    cmd: python src/train/train_cnn.py
+    deps:
+      - src/train/train_cnn.py
+      - ${data.train_dir}
+      - ${data.valid_dir}
+      - ${data.test_dir}
+    params:
+      - cnn.batch_size
+      - cnn.epochs
+      - cnn.lr
+      - models.cnn
+    outs:
+      - ${models.cnn}
