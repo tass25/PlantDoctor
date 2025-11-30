@@ -11,8 +11,7 @@ stages:
       - mobilenet.epochs
       - mobilenet.lr
       - models.mobilenet
-    outs:
-      - ${models.mobilenet}
+    
 
   train_cnn:
     cmd: python src/train/train_cnn.y
@@ -26,5 +25,4 @@ stages:
       - cnn.epochs
       - cnn.lr
       - models.cnn
-    outs:
-      - ${models.cnn}
+  
