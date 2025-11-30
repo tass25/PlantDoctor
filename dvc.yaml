@@ -15,7 +15,7 @@ stages:
       - ${models.mobilenet}
 
   train_cnn:
-    cmd: python src/train/train_cnn.py
+    cmd: python src/train/train_cnn.y
     deps:
       - src/train/train_cnn.py
       - ${data.train_dir}
