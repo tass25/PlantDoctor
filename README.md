@@ -42,7 +42,7 @@ A comprehensive plant disease diagnosis system using MobileNetV2 and RAG (Retrie
 | Category            | Technologies                                     |
 |--------------------|-------------------------------------------------|
 | Languages          | Python, JavaScript (React)                      |
-| Deep Learning      | PyTorch, TensorFlow, Keras                      |
+| Deep Learning      | PyTorch, TensorFlow                             |
 | Backend            | FastAPI                                         |
 | Frontend           | React.js                                        |
 | Cloud Hosting      | Microsoft Azure                                 |
