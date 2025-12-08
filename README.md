@@ -102,14 +102,13 @@ Dataset preprocessing includes normalization, augmentation (rotation, flipping, 
 - **Output Classes**: Multiple plant disease categories  
 - **Optimizer**: Adam  
 - **Loss Function**: Categorical Cross-Entropy  
-- **Training Metrics**: Accuracy, Precision, Recall, F1-Score
+- **Training Metrics**: Accuracy
 
 ---
 
 ## Performance & Evaluation
 
 - **Validation Accuracy**: 95%+ on top classes  
-- **Confusion Matrix**: Ensures correct identification of similar diseases  
 - **Explainability**: RAG provides human-readable context for model outputs
 
 ---
